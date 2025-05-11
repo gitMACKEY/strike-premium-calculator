@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Strike/Premium Ratio Calculator</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        #bar { width: 400px; height: 20px; background: lightgray; margin: 20px auto; position: relative; }
+        #marker { width: 3px; height: 40px; background: red; position: absolute; top: -10px; }
+        #labels { display: flex; justify-content: space-between; width: 400px; margin: auto; }
+    </style>
+</head>
+<body>
+    <h1>Strike/Premium Ratio Calculator</h1>
+    <input type="number" id="strike" placeholder="Strike price">
+    <input type="number" id="premium" placeholder="Premium">
+    <button onclick="calculate()">Calculate</button>
+    <p id="result"></p>
+    <div id="bar"><div id="marker"></div></div>
+    <div id="labels">
+        <span>Market sees real risk</span>
+        <span>You’re underpaid for risk</span>
+    </div>
+
+    <script>
+        function calculate() {
+            const strike = parseFloat(document.getElementById('strike').value);
+            const premium = parseFloat(document.getElementById('premium').value);
+            const marker = document.getElementById('marker');
+            const result = document.getElementById('result');
+
+            if (isNaN(strike) || isNaN(premium) || premium === 0) {
+                result.textContent = "Please enter valid numbers.";
+                return;
+            }
+
+            const ratio = strike / premium;
+            result.textContent = `Strike/Premium Ratio: ${ratio.toFixed(2)}`;
+
+            const ideal = 46.5;
+            const minRatio = ideal / 2;
+            const maxRatio = ideal * 2;
+            const barWidth = 400;
+
+            const clampedRatio = Math.max(minRatio, Math.min(ratio, maxRatio));
+            const position = ((clampedRatio - minRatio) / (maxRatio - minRatio)) * barWidth;
+
+            marker.style.left = `${position}px`;
+        }
+    </script>
+</body>
+</html>
